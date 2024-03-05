@@ -1,2 +1,9 @@
 Please add the cURLs of your tests here:
 
+curl --location 'https://localhost:7629/Showtimes' \
+--header 'Content-Type: application/json' \
+--data '{
+    "AuditoriumId": 1,
+    "SessionDate": "2024-03-05T18:00:00.000",
+    "MovieId": "ID-test1"
+}'

@@ -1,3 +1,4 @@
+using System;
 using ApiApplication.Database;
 using ApiApplication.Database.Repositories;
 using ApiApplication.Database.Repositories.Abstractions;
@@ -26,6 +27,7 @@ namespace ApiApplication
             services.AddTransient<IShowtimesRepository, ShowtimesRepository>();
             services.AddTransient<ITicketsRepository, TicketsRepository>();
             services.AddTransient<IAuditoriumsRepository, AuditoriumsRepository>();
+            services.AddTransient<IApiClientGrpc, ApiClientGrpc>();
 
             services.AddDbContext<CinemaContext>(options =>
             {
@@ -36,6 +38,7 @@ namespace ApiApplication
             services.AddControllers();
 
             services.AddHttpClient();
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
