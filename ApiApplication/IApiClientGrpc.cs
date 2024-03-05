@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using ProtoDefinitions;
 
-namespace ApiApplication;
+namespace ApiApplication.Infrastructure.Grpc.MoviesApi;
 
 public interface IApiClientGrpc
 {
-    Task<showListResponse> GetAll();
+    Task<showListResponse> GetAllAsync();
 }

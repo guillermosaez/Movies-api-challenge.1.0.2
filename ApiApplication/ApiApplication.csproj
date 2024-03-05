@@ -20,4 +20,8 @@
     <Protobuf Include="movies.proto" GrpcServices="Client" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\Grpc\MoviesApi\" />
+  </ItemGroup>
+
 </Project>

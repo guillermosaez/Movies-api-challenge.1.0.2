@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ApiApplication.Database.Entities;
 using ApiApplication.Database.Repositories.Abstractions;
 using ApiApplication.Exceptions;
+using ApiApplication.Infrastructure.Grpc.MoviesApi;
 using MediatR;
 using ProtoDefinitions;
 
@@ -42,7 +43,7 @@ public class CreateShowtimeCommandHandler : IRequestHandler<CreateShowtimeComman
 
     private async Task<showResponse> GetMovieAsync(string movieId)
     {
-        var allMovies = await _apiClientGrpc.GetAll();
+        var allMovies = await _apiClientGrpc.GetAllAsync();
         var movie = allMovies?.Shows?.FirstOrDefault(m => m.Id == movieId); //A client query filtering by movieId would probably be better in terms of performance.
         if (movie is null) throw new NotFoundException();
         

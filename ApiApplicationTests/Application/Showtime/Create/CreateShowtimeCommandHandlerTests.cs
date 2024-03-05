@@ -3,6 +3,7 @@ using ApiApplication.Application.Showtime.Create;
 using ApiApplication.Database.Entities;
 using ApiApplication.Database.Repositories.Abstractions;
 using ApiApplication.Exceptions;
+using ApiApplication.Infrastructure.Grpc.MoviesApi;
 using Moq;
 using ProtoDefinitions;
 
@@ -23,7 +24,7 @@ public class CreateShowtimeCommandHandlerTests
         {
             MovieId = "NonExistentMovie"
         };
-        _apiClientGrpcMock.Setup(a => a.GetAll()).ReturnsAsync(new showListResponse());
+        _apiClientGrpcMock.Setup(a => a.GetAllAsync()).ReturnsAsync(new showListResponse());
 
         //Act
         var action = () => _sut.Handle(command, default);
@@ -52,7 +53,7 @@ public class CreateShowtimeCommandHandlerTests
                 Year = "2024"
             }
         };
-        _apiClientGrpcMock.Setup(a => a.GetAll()).ReturnsAsync(new showListResponse
+        _apiClientGrpcMock.Setup(a => a.GetAllAsync()).ReturnsAsync(new showListResponse
         {
             Shows = { movies }
         });

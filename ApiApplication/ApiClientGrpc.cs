@@ -1,43 +1,29 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Grpc.Core;
-using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 using ProtoDefinitions;
 
-namespace ApiApplication
+namespace ApiApplication.Infrastructure.Grpc.MoviesApi;
+
+public class ApiClientGrpc : IApiClientGrpc
 {
-    public class ApiClientGrpc : IApiClientGrpc
+    private readonly ProtoDefinitions.MoviesApi.MoviesApiClient _moviesApiClient;
+    private readonly IConfiguration _configuration;
+
+    public ApiClientGrpc(ProtoDefinitions.MoviesApi.MoviesApiClient moviesApiClient, IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration;
-
-        public ApiClientGrpc(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        _moviesApiClient = moviesApiClient;
+        _configuration = configuration;
+    }
         
-        public async Task<showListResponse> GetAll()
+    public async Task<showListResponse> GetAllAsync()
+    {
+        var headers = new Metadata
         {
-            var httpHandler = new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback =
-                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            };
-
-            var channel =
-                GrpcChannel.ForAddress("https://localhost:7443", new GrpcChannelOptions()
-                {
-                    HttpHandler = httpHandler
-                });
-            var client = new MoviesApi.MoviesApiClient(channel);
-
-            var headers = new Metadata
-            {
-                { "X-Apikey", _configuration[ConfigurationKeyNames.MoviesApi.Key] }
-            };
-            var all = await client.GetAllAsync(new Empty(), headers);
-            all.Data.TryUnpack<showListResponse>(out var data);
-            return data;
-        }
+            { "X-Apikey", _configuration[ConfigurationKeyNames.MoviesApi.Key] }
+        };
+        var all = await _moviesApiClient.GetAllAsync(new Empty(), headers);
+        all.Data.TryUnpack<showListResponse>(out var data);
+        return data;
     }
 }
