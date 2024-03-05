@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StackExchange.Redis;
 
 namespace ApiApplication
 {
@@ -39,6 +40,11 @@ namespace ApiApplication
 
             services.AddHttpClient();
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+
+            // services.AddTransient<IDatabase>(cfg =>
+            // {
+            //     var multiplexer = ConnectionMultiplexer.Connect()
+            // });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
