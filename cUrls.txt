@@ -1,2 +1,39 @@
 Please add the cURLs of your tests here:
 
+
+Create showtime
+
+curl --location 'https://localhost:7629/Showtimes' \
+--header 'Content-Type: application/json' \
+--data '{
+    "AuditoriumId": 1,
+    "SessionDate": "2024-03-05T18:00:00.000",
+    "MovieId": "ID-test1"
+}'
+
+Book a ticket
+
+curl --location 'https://localhost:7629/Tickets/book' \
+--header 'Content-Type: application/json' \
+--data '{
+    "ShowtimeId": 1,
+    "Seats": [
+        {
+            "Row": 1,
+            "Number": 1
+        },
+        {
+            "Row": 1,
+            "Number": 2
+        },
+        {
+            "Row": 1,
+            "Number": 3
+        }
+    ]
+}'
+
+Pay a ticket
+
+curl --location --request PATCH 'https://localhost:7629/Tickets/{{ticketGuid}}/pay' \
+--header 'Content-Type: application/json'

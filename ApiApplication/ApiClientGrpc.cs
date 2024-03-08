@@ -1,30 +1,48 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using Grpc.Net.Client;
+﻿using System.Threading.Tasks;
+using ApiApplication.Infrastructure.Cache;
+using Grpc.Core;
+using Microsoft.Extensions.Configuration;
 using ProtoDefinitions;
 
-namespace ApiApplication
+namespace ApiApplication.Infrastructure.Grpc.MoviesApi;
+
+public class ApiClientGrpc : IApiClientGrpc
 {
-    public class ApiClientGrpc
+    private readonly ProtoDefinitions.MoviesApi.MoviesApiClient _moviesApiClient;
+    private readonly IConfiguration _configuration;
+    private readonly ICacheClient _cacheClient;
+
+    public ApiClientGrpc(
+        ProtoDefinitions.MoviesApi.MoviesApiClient moviesApiClient,
+        IConfiguration configuration,
+        ICacheClient cacheClient
+    )
     {
-        public async Task<showListResponse> GetAll()
+        _moviesApiClient = moviesApiClient;
+        _configuration = configuration;
+        _cacheClient = cacheClient;
+    }
+        
+    public async Task<showListResponse> GetAllAsync()
+    {
+        const string cacheKey = "ApiClientGrpc:MoviesApi:GetAll";
+        try
         {
-            var httpHandler = new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback =
-                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            };
-
-            var channel =
-                GrpcChannel.ForAddress("https://localhost:7443", new GrpcChannelOptions()
-                {
-                    HttpHandler = httpHandler
-                });
-            var client = new MoviesApi.MoviesApiClient(channel);
-
-            var all = await client.GetAllAsync(new Empty());
+            var all = await _moviesApiClient.GetAllAsync(new Empty(), GetDefaultHeaders());
             all.Data.TryUnpack<showListResponse>(out var data);
             return data;
         }
+        catch
+        {
+            return await _cacheClient.GetAsync<showListResponse>(cacheKey);
+        }
+    }
+
+    private Metadata GetDefaultHeaders()
+    {
+        return new()
+        {
+            { "X-Apikey", _configuration[ConfigurationKeyNames.MoviesApi.Key] }
+        };
     }
 }

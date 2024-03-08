@@ -7,7 +7,7 @@
   "profiles": {
     "ApiApplication": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "showtime",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
