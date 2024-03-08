@@ -1,8 +1,6 @@
-using ApiApplication;
 using ApiApplication.Application.Showtime.Create;
 using ApiApplication.Database.Entities;
 using ApiApplication.Database.Repositories.Abstractions;
-using ApiApplication.Exceptions;
 using ApiApplication.Infrastructure.Grpc.MoviesApi;
 using Moq;
 using ProtoDefinitions;
@@ -30,7 +28,7 @@ public class CreateShowtimeCommandHandlerTests
         var action = () => _sut.Handle(command, default);
 
         //Assert
-        await Assert.ThrowsAsync<NotFoundException>(action);
+        await Assert.ThrowsAsync<MovieNotFoundException>(action);
     }
     
     [Fact]

@@ -32,3 +32,8 @@ curl --location 'https://localhost:7629/Tickets/book' \
         }
     ]
 }'
+
+Pay a ticket
+
+curl --location --request PATCH 'https://localhost:7629/Tickets/{{ticketGuid}}/pay' \
+--header 'Content-Type: application/json'
