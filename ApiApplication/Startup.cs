@@ -7,6 +7,7 @@ using ApiApplication.Infrastructure.Grpc.MoviesApi;
 using ApiApplication.Infrastructure.Cache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -62,6 +63,8 @@ public class Startup
             var redisConnection = ConnectionMultiplexer.Connect($"{redisUrl}:{redisPort}");
             return redisConnection.GetDatabase();
         });
+
+        services.AddHttpLogging(o => o.LoggingFields = HttpLoggingFields.Duration);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,6 +85,8 @@ public class Startup
         {
             endpoints.MapControllers();
         });
+
+        app.UseHttpLogging();
 
         SampleData.Initialize(app);
     }      
