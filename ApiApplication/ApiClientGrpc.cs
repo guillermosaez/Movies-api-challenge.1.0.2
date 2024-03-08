@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ApiApplication.Infrastructure.Cache;
 using Grpc.Core;
 using Microsoft.Extensions.Configuration;
